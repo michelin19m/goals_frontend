@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
+import ChartComponent from './ChartComponent';
 
 const GoalDetail = () => {
   const [goal, setGoal] = useState(null);
@@ -23,30 +24,47 @@ const GoalDetail = () => {
     fetchGoalDetails();
   }, [goalId]);
 
+  const deleteStat = async (statId) => {
+    try {
+      await axios.delete(`http://localhost:3000/goals/${goalId}/stats/${statId}`);
+      const updatedStats = stats.filter(stat => stat.id !== statId);
+      setStats(updatedStats);
+      alert('Stat deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting stat:', error);
+      alert('Failed to delete stat.');
+    }
+  };
+
   return (
-    <div>
+    <div className="container mt-4">
       {goal ? (
         <div>
-          <h2>{goal.description}</h2>
-          <p>Target Date: {goal.target_date}</p>
-          <p>Target Value: {goal.target_value}</p>
-          <p>Starting Value: {goal.starting_value}</p>
-          <h3>Stats
-            <span>
-              <Link to={`/goals/${goal.id}/add-stat`}>+</Link>
-            </span>
-          </h3>
-          <ul>
+          <h2 className="mb-3">{goal.description}</h2>
+          <div className="mb-3">
+            <p><strong>Target Date:</strong> {goal.target_date}</p>
+            <p><strong>Target Value:</strong> {goal.target_value}</p>
+            <p><strong>Starting Value:</strong> {goal.starting_value}</p>
+          </div>
+          <div className="mb-3">
+            <h3 className="d-flex justify-content-between align-items-center">
+              Stats
+              <Link className="btn btn-primary" to={`/goals/${goal.id}/add-stat`}>Add Stat</Link>
+            </h3>
             {stats.length > 0 ? (
-              stats.map((stat) => (
-                <li key={stat.id}>
-                  Date: {stat.recorded_date}, Progress: {stat.progress_value}
-                </li>
-              ))
+              <ul className="list-group">
+                {stats.map((stat) => (
+                  <li className="list-group-item d-flex justify-content-between align-items-center" key={stat.id}>
+                    Date: {stat.recorded_date}, Progress: {stat.progress_value}
+                    <button className="btn btn-outline-danger" onClick={() => deleteStat(stat.id)}>Delete</button>
+                  </li>
+                ))}
+              </ul>
             ) : (
               <p>No stats available.</p>
             )}
-          </ul>
+          </div>
+          <ChartComponent stats={stats} />
         </div>
       ) : (
         <p>Loading goal details...</p>
