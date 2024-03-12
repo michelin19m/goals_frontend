@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import httpClient from './utils/httpClient';
 
 const CreateGoalForm = () => {
   const [description, setDescription] = useState('');
@@ -11,7 +11,7 @@ const CreateGoalForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.post('http://localhost:3000/goals', {
+      await httpClient.post(`${process.env.REACT_APP_BACKEND_URL}/goals`, {
         goal: {
           description,
           short_desc: shortDesc,

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import httpClient from './utils/httpClient';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const AddStatForm = () => {
@@ -11,7 +11,7 @@ const AddStatForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.post(`http://localhost:3000/goals/${goalId}/stats`, {
+      await httpClient.post(`${process.env.REACT_APP_BACKEND_URL}/goals/${goalId}/stats`, {
         stat: {
           recorded_date: recordedDate,
           progress_value: parseInt(progressValue, 10),

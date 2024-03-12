@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import httpClient from './utils/httpClient';
 import { Link, useParams } from 'react-router-dom';
 import ChartComponent from './ChartComponent';
 
@@ -11,10 +11,10 @@ const GoalDetail = () => {
   useEffect(() => {
     const fetchGoalDetails = async () => {
       try {
-        const goalResponse = await axios.get(`http://localhost:3000/goals/${goalId}`);
+        const goalResponse = await httpClient.get(`${process.env.REACT_APP_BACKEND_URL}/goals/${goalId}`);
         setGoal(goalResponse.data);
 
-        const statsResponse = await axios.get(`http://localhost:3000/goals/${goalId}/stats`);
+        const statsResponse = await httpClient.get(`${process.env.REACT_APP_BACKEND_URL}/goals/${goalId}/stats`);
         setStats(statsResponse.data);
       } catch (error) {
         console.error('Error fetching goal details or stats:', error);
@@ -26,7 +26,7 @@ const GoalDetail = () => {
 
   const deleteStat = async (statId) => {
     try {
-      await axios.delete(`http://localhost:3000/goals/${goalId}/stats/${statId}`);
+      await httpClient.delete(`${process.env.REACT_APP_BACKEND_URL}/goals/${goalId}/stats/${statId}`);
       const updatedStats = stats.filter(stat => stat.id !== statId);
       setStats(updatedStats);
       alert('Stat deleted successfully!');

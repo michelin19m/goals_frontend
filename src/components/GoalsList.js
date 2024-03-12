@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import httpClient from './utils/httpClient';
 import { Link } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
@@ -10,7 +10,7 @@ const GoalsList = () => {
 
   useEffect(() => {
     const fetchGoals = async () => {
-      const response = await axios.get('http://localhost:3000/goals');
+      const response = await httpClient.get(`${process.env.REACT_APP_BACKEND_URL}/goals`);
       const fetchedGoals = response.data;
       setGoals(fetchedGoals);
 
