@@ -7,6 +7,8 @@ const CreateGoalForm = () => {
   const [targetDate, setTargetDate] = useState('');
   const [targetValue, setTargetValue] = useState('');
   const [startingValue, setStartingValue] = useState('');
+  const [notifyMe, setNotifyMe] = useState(false);
+  const [notificationFrequency, setNotificationFrequency] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -18,6 +20,8 @@ const CreateGoalForm = () => {
           target_date: targetDate,
           target_value: parseInt(targetValue, 10),
           starting_value: parseInt(startingValue, 10),
+          notify_me: notifyMe,
+          notification_frequency: notifyMe ? notificationFrequency : null,
         },
       });
       alert('Goal created successfully!');
@@ -84,6 +88,33 @@ const CreateGoalForm = () => {
             onChange={(e) => setStartingValue(e.target.value)}
           />
         </div>
+        <div className="mb-3 form-check">
+          <input
+            type="checkbox"
+            className="form-check-input"
+            id="notifyMe"
+            checked={notifyMe}
+            onChange={(e) => setNotifyMe(e.target.checked)}
+          />
+          <label className="form-check-label" htmlFor="notifyMe">Notify me</label>
+        </div>
+
+        {notifyMe && (
+          <div className="mb-3">
+            <label htmlFor="notificationFrequency" className="form-label">Notification Frequency</label>
+            <select
+              className="form-control"
+              id="notificationFrequency"
+              value={notificationFrequency}
+              onChange={(e) => setNotificationFrequency(e.target.value)}
+            >
+              <option value="daily">Once a day</option>
+              <option value="weekly">Once a week</option>
+              <option value="monthly">Once a month</option>
+            </select>
+          </div>
+        )}
+
         <button type="submit" className="btn btn-primary">Create Goal</button>
       </form>
     </div>
